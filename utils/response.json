@@ -1,0 +1,20 @@
+{
+  "event": {
+    "app": "monday",
+    "type": "create_pulse",
+    "triggerTime": "2025-01-29T15:55:22.237Z",
+    "subscriptionId": null,
+    "isRetry": true,
+    "userId": -4,
+    "originalTriggerUuid": null,
+    "boardId": null,  
+    "pulseId": null,
+    "pulseName": "Work Order",
+    "groupId": "new_group29179",
+    "groupName": "Active Projects",
+    "groupColor": "#579bfc",
+    "isTopGroup": true,
+    "columnValues": {},
+    "triggerUuid": null
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "email_automation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "webhook": "ngrok http http://localhost:8080",
+    "server": "node --watch index.js "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ngrok/ngrok": "^1.4.1",
+    "axios": "^1.10.0",
+    "dotenv": "^16.4.7",
+    "pdf-parse": "^1.1.1"
+  },
+  "description": ""
+}
