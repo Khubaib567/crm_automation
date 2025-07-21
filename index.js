@@ -4,23 +4,26 @@ const http = require('http');
 const port = process.env.PORT
 
 const server = http.createServer((req, res) => {
-  if (req.method === 'GET' && req.url === '/') {
-    let body = null;
+  if (req.method === 'POST' && req.url === '/') {
+    let body = '';
 
     // Listen for data events to collect the incoming data
     req.on('data', chunk => {
       body += chunk.toString(); // Convert Buffer to string
     });
 
-    // Listen for the end event to process the complete request
+    // EVENT LISTENER TO COMPLETE THE REQUEST.
     req.on('end', () => {
-      console.log(body); // Log the received body
+      // LOG THE REQUEST RESPONSE TO VERIFY WEBHOOKS IS WORKING.
+      console.log(JSON.parse(body)); 
+      // UPDATE THE COLUMN LOGIC HERE.
+
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ response: body })); // Send response
+      res.end("Content has been updated!"); // SEND RESPONSE.
     });
   } else {
     // Handle other methods or routes
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end('Not Found');
   }
 });
