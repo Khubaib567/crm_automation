@@ -43,10 +43,10 @@ async function updateColumns(boardId, itemId, columnId, value) {
 }
 
 // Example usage
-const boardId = 12345678;
-const itemId = 87654321;
-const columnId = "status";
-const value = '{"label": "In Progress"}';
+const boardId = 1957521096;
+const itemId = 2045932777;
+const columnId = "project_status";
+const value = '{"label": "Working on it"}';
 
 updateColumns(boardId, itemId, columnId, value)
     .then(response => {

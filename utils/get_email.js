@@ -1,5 +1,6 @@
 const axios = require('axios');
 const fs = require('fs');
+const { convert } = require('html-to-text');
 require('dotenv').config({path : '../.secrets/.env'}); // Use this if using a .env file
 
 
@@ -45,20 +46,22 @@ module.exports = fetchEmail = async (PULSE_ID) => {
       }
     );
 
-    // const [{ updates }] = response.data.data.items;
-    console.log(response.data);
-    // const email = JSON.stringify(updates, null, 2)
-    // fs.writeFile('email.json', email, (err) => {
-    //   if (err) {
-    //     console.error('Error writing file', err);
-    //   } else {
-    //     console.log('Successfully saved updates to email.json');
-    //   }
-    // });
+    const text  = response.data.data.items[0].updates[0].body;
+    // console.log(response.data.data.items[0].updates[0].body);
+    const email = convert(text)
+    // console.log(email)
+    return new Promise((resolve, reject) => {
+    fs.writeFile('./assets/email.txt', email, (err) => {
+      if (err) {
+        return reject("Error writing file");
+      }
+      return resolve("Successfully saved updates to email.txt!");
+    });
+  });
   } catch (error) {
-    console.error("Error fetching data:", error.response?.data || error.message);
+    Error("Error fetching data:", error.response?.data || error.message);
   }
 }
 
-const PULSE_ID = process.env.PULSE_ID
-fetchEmail(PULSE_ID);
+// const PULSE_ID = process.env.PULSE_ID
+// fetchEmail(PULSE_ID);

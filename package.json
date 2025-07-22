@@ -13,6 +13,7 @@
     "@ngrok/ngrok": "^1.4.1",
     "axios": "^1.10.0",
     "dotenv": "^16.4.7",
+    "html-to-text": "^9.0.5",
     "pdf-parse": "^1.1.1"
   },
   "description": ""
