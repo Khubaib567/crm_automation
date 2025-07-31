@@ -23,12 +23,12 @@ async function updateColumns(boardId, itemId, columnId, value) {
         }
     }`;
 
-    const variables = {
-        boardId: boardId,
-        itemId: itemId,
-        columnId: columnId,
-        value: value
-    };
+    // const variables = {
+    //     boardId: boardId,
+    //     itemId: itemId,
+    //     columnId: columnId,
+    //     value: value
+    // };
 
     try {
         const response = await axios.post(API_URL, {
@@ -48,7 +48,8 @@ const itemId = 2045932777;
 const columnId = "project_status";
 const value = '{"label": "Working on it"}';
 
-updateColumns(boardId, itemId, columnId, value)
-    .then(response => {
-        console.log(response);
-    });
+// updateColumns(boardId, itemId, columnId, value)
+//     .then(response => {
+//         console.log(response);
+//     });
+

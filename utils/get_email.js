@@ -1,5 +1,6 @@
 const axios = require('axios');
 const fs = require('fs');
+const path = require("path")
 const { convert } = require('html-to-text');
 require('dotenv').config({path : '../.secrets/.env'}); // Use this if using a .env file
 
@@ -31,9 +32,9 @@ query {
 }
 
 // Function to fetch data from Monday.com
-module.exports = fetchEmail = async (PULSE_ID) => {
+module.exports = get_email = async (PULSE_ID) => {
   const query = queryData(PULSE_ID)
-  // console.log(queryData)
+  // console.log(query)
   try {
     const response = await axios.post(
       'https://api.monday.com/v2',
@@ -48,14 +49,15 @@ module.exports = fetchEmail = async (PULSE_ID) => {
 
     const text  = response.data.data.items[0].updates[0].body;
     // console.log(response.data.data.items[0].updates[0].body);
-    const email = convert(text)
+    const email = await convert(text)
     // console.log(email)
+    const filePath = path.join( __dirname, "../assets/email.txt")
     return new Promise((resolve, reject) => {
-    fs.writeFile('./assets/email.txt', email, (err) => {
+    fs.writeFile(filePath, email, (err) => {
       if (err) {
         return reject("Error writing file");
       }
-      return resolve("Successfully saved updates to email.txt!");
+      return resolve("Successfully saved the email.");
     });
   });
   } catch (error) {
