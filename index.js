@@ -23,12 +23,11 @@ const server = http.createServer((req, res) => {
     // EVENT LISTENER TO COMPLETE THE REQUEST.
     req.on('end', async () => {
       // LOG THE REQUEST RESPONSE TO VERIFY WEBHOOKS IS WORKING.
-      // console.log(json.event.pulseId);
-      const boardId = json.event.boardId
-      const pulseId = json.event.pulseId
-      const noteId = json.event.pulseId
-      const workOrderId = json.event.pulseId
-      // console.log(boardId)
+      // const boardId = json.event.boardId
+      // const pulseId = json.event.pulseId
+      // const noteId = json.event.pulseId
+      // const workOrderId = json.event.pulseId
+      // console.log(json)
 
       // console.log(typeof(pulseId))
       // UTIL FOR GET THE EMAIL COLUMN VALUES
