@@ -1,7 +1,7 @@
 const fs = require('fs').promises;
 const path = require("path")
 
-module.exports = set_email = async (filePath) => {
+module.exports = email_parser = async (filePath) => {
   try {
     const text = await fs.readFile(filePath, 'utf8');
     const lines = text.split('\n');
