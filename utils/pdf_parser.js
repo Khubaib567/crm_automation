@@ -1,13 +1,11 @@
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
 
-module.exports = pdf_parser = (filePath) => {
+module.exports = pdf_parser = async (filePath) => {
     const pdfBuffer = fs.readFileSync(filePath);
 
-    pdfParse(pdfBuffer).then(data => {
-        // console.log(data.text);
-        return data.text
-    });
+    const invoice = await pdfParse(pdfBuffer)
+    return invoice
 }
 
 

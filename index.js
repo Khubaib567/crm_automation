@@ -6,7 +6,7 @@ const port = process.env.PORT
 const get_email = require("./utils/get_email")
 const email_parser = require("./utils/email_parser");
 const pdf_parser = require("./utils/pdf_parser");
-const update_column = require("./utils/update_email")
+const set_email = require("./utils/set_email")
 
 const server = http.createServer((req, res) => {
   if (req.method === 'POST' && req.url === '/') {
@@ -24,27 +24,25 @@ const server = http.createServer((req, res) => {
     req.on('end', async () => {
       // LOG THE REQUEST RESPONSE TO VERIFY WEBHOOKS IS WORKING.
       // const boardId = json.event.boardId
-      // const pulseId = json.event.pulseId
+      const pulseId = json.event.pulseId
       // const noteId = json.event.pulseId
       // const workOrderId = json.event.pulseId
       // console.log(json)
 
       // console.log(typeof(pulseId))
       // UTIL FOR GET THE EMAIL COLUMN VALUES
-      // const message = await get_email(pulseId)
-      // console.log(message)
-      // const email_path = path.join(__dirname, "./assets/email.txt")
-      // const pdf_path = path.join(__dirname, "./assets/work_order.pdf")
-      
-      // console.log(result)
-      // UTIL FOR SET THE EMAIL COLUMN VALUES
+      const message = await get_email(pulseId)
+      console.log(message)
+      const email_path = path.join(__dirname, "./assets/email.txt")
       // console.log(email_path)
-      // const email = await email_parser(email_path)
+      // const pdf_path = path.join(__dirname, "./assets/work_order.pdf")
+      // console.log(pdf_path)
+      // UTIL FOR SET THE EMAIL COLUMN VALUES
+      const email = await email_parser(email_path)
       // console.log(email)
-      // const invoice = await pdf_parser(pdf_path)
-
-      // const result = await update_column(boardId,pulseId,noteId,email,workOrderId,invoice)
-      // console.log(result)
+      const invoice = await pdf_parser(pdf_path)
+      const result = await set_email(boardId,pulseId,noteId,email,workOrderId,invoice)   // UPDATE API NOT WORKING
+      console.log(result)
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(body); // SEND RESPONSE.

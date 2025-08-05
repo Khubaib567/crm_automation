@@ -6,14 +6,14 @@ const API_TOKEN = process.env.API_TOKEN;
 // console.log(API_TOKEN)
 
 // Function to update column value on Monday.com
-async function update_email(boardId , itemId, columnId, value) {
+module.exports = set_email = async (boardId , itemId, columnId, value) =>  {
     const headers = {
         "Authorization": API_TOKEN,
         "Content-Type": "application/json"
     };
 
     const query = `
-    mutation ($boardId: ID! , $itemId: ID!, $columnId: String!, $value: JSON!) {
+    mutation ($boardId: ID! , $itemId: ID!, $columnId: String!, $value: String!) {
         change_column_value(
             board_id : $boardId
             item_id: $itemId, 
@@ -46,10 +46,12 @@ async function update_email(boardId , itemId, columnId, value) {
 // Example usage
 // const boardId = 2051694766
 // const itemId = 2051699796;
-// const columnId = "text9";
-// const value = {"message": "Email Description"};
+// const columnId = "text_mkthmmjs";
+// const value =  "description" ;
 
-// update_email(boardId, itemId, columnId, value)
+// console.log(value)
+
+// set_email(boardId, itemId, columnId, value)
 //     .then(response => {
 //         console.log(response);
 //     });
