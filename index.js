@@ -1,60 +1,80 @@
-require('dotenv').config({ path: './.secrets/.env' }); // Use this if using a .env file
+require('dotenv').config({ path: './.secrets/.env' });
 
-const http = require('http');
-const path = require("path")
-const port = process.env.PORT
-const get_email = require("./utils/get_email")
+const express = require('express');
+const path = require("path");
+const port = process.env.PORT;
+const get_email = require("./utils/get_email");
 const email_parser = require("./utils/email_parser");
 const pdf_parser = require("./utils/pdf_parser");
-const set_email = require("./utils/set_email")
+const update_columns = require("./utils/update_columns");
 
-const server = http.createServer((req, res) => {
-  if (req.method === 'POST' && req.url === '/') {
-    let body = '';
-    let json;
+const app = express();
 
-    // Listen for data events to collect the incoming data
-    req.on('data', chunk => {
-      body += chunk.toString(); // Convert Buffer to string
-      json = JSON.parse(body)
-      // console.log(json)
-    });
+// Use built-in middleware to parse JSON request bodies
+app.use(express.json());
 
-    // EVENT LISTENER TO COMPLETE THE REQUEST.
-    req.on('end', async () => {
-      // LOG THE REQUEST RESPONSE TO VERIFY WEBHOOKS IS WORKING.
-      // const boardId = json.event.boardId
-      const pulseId = json.event.pulseId
-      // const noteId = json.event.pulseId
-      // const workOrderId = json.event.pulseId
-      // console.log(json)
-
-      // console.log(typeof(pulseId))
-      // UTIL FOR GET THE EMAIL COLUMN VALUES
-      const message = await get_email(pulseId)
-      console.log(message)
-      const email_path = path.join(__dirname, "./assets/email.txt")
-      // console.log(email_path)
-      // const pdf_path = path.join(__dirname, "./assets/work_order.pdf")
-      // console.log(pdf_path)
-      // UTIL FOR SET THE EMAIL COLUMN VALUES
-      const email = await email_parser(email_path)
-      // console.log(email)
-      const invoice = await pdf_parser(pdf_path)
-      const result = await set_email(boardId,pulseId,noteId,email,workOrderId,invoice)   // UPDATE API NOT WORKING
-      console.log(result)
-
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(body); // SEND RESPONSE.
-    });
-  } else {
-    // Handle other methods or routes
-    res.writeHead(404, { 'Content-Type': 'application/json' });
-    res.end('Not Found');
+// FUNCTION TO VERIFY WEBHOOK
+const verifyWebHook = (token) => {
+try {
+    const jwt = token.toString(); 
+    return jwt;
+  } catch (error) {
+    console.error("Error verifying webhook:", error.message);
+    return error.message;
   }
-});
+}
 
-// Start the server on port 3000
-server.listen(port, () => {
+app.post("/" , async (req,res) => {
+  try {
+    const {challenge , event} = req.body
+
+    if(challenge) {
+    //  console.log(challenge)
+     const token = challenge
+     const jwt = await verifyWebHook(token);
+    //  console.log(jwt)
+     return res.status(200).json({challenge : jwt}); // Return here to stop further execution
+    } 
+
+    if(event) {
+      // console.log(event)
+      const { boardId, pulseId, noteId, workOrderId } = req.body.event;
+      // UTIL FOR GET THE EMAIL COLUMN VALUES
+      console.log("Received event for board:", boardId);
+      const message = await get_email(pulseId);
+      console.log(message);
+
+      // CONFIGURE ASSETS PATH
+      const email_path = path.join(__dirname, process.env.EMAIL_PATH);
+      const pdf_path = path.join(__dirname, process.env.PDF_PATH);
+      // console.log("Email_path: ",email_path)
+      // console.log("Pdf_path: ",pdf_path)
+
+
+      // UTIL FOR SET THE EMAIL COLUMN VALUES
+      const email = await email_parser(email_path);
+      const invoice = await pdf_parser(pdf_path);
+      console.log(invoice)
+    
+      const result = await update_columns(boardId, pulseId, noteId, email, workOrderId, invoice);
+      console.log("Result : " , result);
+      
+      // Send a 200 OK response to the webhook provider
+      return res.status(200).send("Event received successfully");
+      
+    }
+
+    // If neither a challenge nor an event is present, respond with a bad request status
+    return res.status(400).send("Invalid webhook payload");
+      
+    } catch (error) {
+      console.error("Error : ", error.message)
+      return res.status(500).send("Internal Server Error");
+  }
+    
+})
+
+// Start the server
+app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "ngrok": "ngrok http http://localhost:8080",
+    "ngrok": " node --env-file-if-exists=.secrets/.env ngrok/index.js",
     "server": "node --watch index.js "
   },
   "keywords": [],
@@ -13,6 +13,7 @@
     "@ngrok/ngrok": "^1.4.1",
     "axios": "^1.10.0",
     "dotenv": "^16.4.7",
+    "express": "^5.1.0",
     "html-to-text": "^9.0.5",
     "pdf-parse": "^1.1.1"
   },

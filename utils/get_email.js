@@ -48,7 +48,7 @@ module.exports = get_email = async (PULSE_ID) => {
     );
 
     const text  = response.data.data.items[0].updates[0].body;
-    // console.log(response.data.data.items[0].updates[0].body);
+    console.log(response.data.data.items[0].updates[0].body);
     const email = await convert(text)
     // console.log(email)
     const filePath = path.join( __dirname, "../assets/email.txt")
@@ -66,4 +66,4 @@ module.exports = get_email = async (PULSE_ID) => {
 }
 
 // const PULSE_ID = process.env.PULSE_ID
-// fetchEmail(PULSE_ID);
+// get_email(PULSE_ID);
