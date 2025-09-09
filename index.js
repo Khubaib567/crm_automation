@@ -7,6 +7,7 @@ const get_email = require("./utils/get_email");
 const email_parser = require("./utils/email_parser");
 const pdf_parser = require("./utils/pdf_parser");
 const update_columns = require("./utils/update_columns");
+const ngrok = require('@ngrok/ngrok');
 
 const app = express();
 
@@ -78,3 +79,7 @@ app.post("/" , async (req,res) => {
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
+
+// Get your endpoint online
+ngrok.connect({ addr: 8080, authtoken_from_env: true })
+  .then(listener => console.log(`Ingress established at: ${listener.url()}`));

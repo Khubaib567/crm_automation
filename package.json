@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "ngrok": " node --env-file-if-exists=.secrets/.env ngrok/index.js",
-    "server": "node --watch index.js "
+    "ngrok": " ngrok http http://localhost:8080",
+    "server": "node --env-file-if-exists=.secrets/.env --watch index.js "
   },
   "keywords": [],
   "author": "",
@@ -12,7 +12,7 @@
   "dependencies": {
     "@ngrok/ngrok": "^1.4.1",
     "axios": "^1.10.0",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "html-to-text": "^9.0.5",
     "pdf-parse": "^1.1.1"
