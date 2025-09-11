@@ -3,10 +3,11 @@ require('dotenv').config({ path: './.secrets/.env' });
 const express = require('express');
 const path = require("path");
 const port = process.env.PORT;
-const get_email = require("./utils/get_email");
+const get_values = require("./utils/get_values");
 const email_parser = require("./utils/email_parser");
 const pdf_parser = require("./utils/pdf_parser");
-const update_columns = require("./utils/update_columns");
+const uploadFile = require("./utils/uploadfile");
+const update_multiple_columns = require("./utils/update_columns")
 const ngrok = require('@ngrok/ngrok');
 
 const app = express();
@@ -38,28 +39,40 @@ app.post("/" , async (req,res) => {
     } 
 
     if(event) {
-      // console.log(event)
-      const { boardId, pulseId, noteId, workOrderId } = req.body.event;
+      const { boardId, pulseId } = req.body.event;
       // UTIL FOR GET THE EMAIL COLUMN VALUES
       console.log("Received event for board:", boardId);
-      const message = await get_email(pulseId);
-      console.log(message);
+      // console.log(obj.fileID);
+      // console.log(noteId)
 
       // CONFIGURE ASSETS PATH
-      const email_path = path.join(__dirname, process.env.EMAIL_PATH);
       const pdf_path = path.join(__dirname, process.env.PDF_PATH);
+      // console.log(pdf_path)
       // console.log("Email_path: ",email_path)
       // console.log("Pdf_path: ",pdf_path)
 
 
+
       // UTIL FOR SET THE EMAIL COLUMN VALUES
-      const email = await email_parser(email_path);
-      const invoice = await pdf_parser(pdf_path);
-      console.log(invoice)
+      // const email = await email_parser(email_path);
+      const obj = await get_values(pulseId);
+      const pdf = await pdf_parser(pdf_path);
+
+      // console.log(typeof(pdf))
+      // console.log(email)
+      const update = {
+        "text_mkthmmjs" : pdf.email,
+        "numeric_mkvpsn8d" : pdf.purchaseOrders,
+        "numeric_mkvp75bx" : pdf.workOrders
+        
+      }
     
-      const result = await update_columns(boardId, pulseId, noteId, email, workOrderId, invoice);
+      // console.log(pdf.buffer)
+      const result = await uploadFile(pulseId , obj.fileID, pdf.buffer)
       console.log("Result : " , result);
-      
+
+      const columns = await update_multiple_columns(boardId, pulseId , update)
+      console.log("Columns has been updated: " , columns)
       // Send a 200 OK response to the webhook provider
       return res.status(200).send("Event received successfully");
       
@@ -81,5 +94,5 @@ app.listen(port, () => {
 });
 
 // Get your endpoint online
-ngrok.connect({ addr: 8080, authtoken_from_env: true })
-  .then(listener => console.log(`Ingress established at: ${listener.url()}`));
+// ngrok.connect({ addr: 8080, authtoken_from_env: true })
+//   .then(listener => console.log(`Ingress established at: ${listener.url()}`));

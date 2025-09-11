@@ -32,7 +32,7 @@ query {
 }
 
 // Function to fetch data from Monday.com
-module.exports = get_email = async (PULSE_ID) => {
+module.exports = get_values = async (PULSE_ID) => {
   const query = queryData(PULSE_ID)
   // console.log(query)
   try {
@@ -47,17 +47,29 @@ module.exports = get_email = async (PULSE_ID) => {
       }
     );
 
+    let obj = {}
     const text  = response.data.data.items[0].updates[0].body;
-    console.log(response.data.data.items[0].updates[0].body);
+    const emailID = response.data.data.items[0].column_values[3].id
+    const fileID = response.data.data.items[0].column_values[5].id
+    
+    // console.log(emailID)
+
+    obj = {
+      emailID : emailID,
+      fileID : fileID,
+      
+    }
+
+    // console.log(response.data.data.items[0].updates[0].body);
     const email = await convert(text)
     // console.log(email)
     const filePath = path.join( __dirname, "../assets/email.txt")
     return new Promise((resolve, reject) => {
     fs.writeFile(filePath, email, (err) => {
       if (err) {
-        return reject("Error writing file");
+        return reject(err.message);
       }
-      return resolve("Successfully saved the email.");
+      return resolve(obj);
     });
   });
   } catch (error) {
@@ -66,4 +78,4 @@ module.exports = get_email = async (PULSE_ID) => {
 }
 
 // const PULSE_ID = process.env.PULSE_ID
-// get_email(PULSE_ID);
+// get_values(PULSE_ID);
