@@ -22,7 +22,8 @@ module.exports = parser = async (filePath) => {
         const woRegex = /WO:\s*(\d{6})\b|Work order:\s*(\d{6})\b/gi;
         const woMatches = [...invoiceText.matchAll(woRegex)];
         const woNumbers = woMatches.map(match => match);
-        const email_path = path.join(__dirname, process.env.EMAIL_PATH);
+
+        const email_path = path.join(process.env.EMAIL_PATH);
         const email = await email_parser(email_path)
 
         const numberRegex = /\d+/; // Matches one or more digits
@@ -38,8 +39,8 @@ module.exports = parser = async (filePath) => {
         return {
             buffer : pdfBuffer,
             email : email ,
-            purchaseOrders: poNumber,
-            workOrders: woNumber
+            purchaseOrder: poNumber,
+            workOrder: woNumber
         };
 
     } catch (error) {

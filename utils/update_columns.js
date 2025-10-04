@@ -6,7 +6,7 @@ const API_TOKEN = process.env.API_TOKEN;
 
 // Function to update multiple column values on Monday.com
 // The 'updates' parameter should be a JSON object, e.g., { "column_id_1": "new_value_1", "column_id_2": "new_value_2" }
-module.exports = update_multiple_columns = async (boardId, itemId, updates) => {
+module.exports = update_multiple_columns = async (boardId, itemId, email , purchaseOrder , workOrder) => {
     const headers = {
         "Authorization": API_TOKEN,
         "Content-Type": "application/json"
@@ -24,11 +24,19 @@ module.exports = update_multiple_columns = async (boardId, itemId, updates) => {
         }
     }`;
 
+    const update = {
+            "text_mkwdddg3" : email,
+            "numeric_mkwdebvv" : purchaseOrder,
+            "numeric_mkwd79w6" : workOrder
+            
+    }
+        
+
     // The updates object is converted to a JSON string here.
     const variables = {
         boardId: boardId,
         itemId: itemId,
-        columnValues: JSON.stringify(updates)
+        columnValues: JSON.stringify(update)
     };
 
     try {

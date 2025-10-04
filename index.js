@@ -4,7 +4,7 @@ const express = require('express');
 const path = require("path");
 const port = process.env.PORT;
 const get_values = require("./utils/get_values");
-const email_parser = require("./utils/email_parser");
+// const email_parser = require("./utils/email_parser");
 const pdf_parser = require("./utils/pdf_parser");
 const uploadFile = require("./utils/uploadfile");
 const update_multiple_columns = require("./utils/update_columns")
@@ -60,18 +60,12 @@ app.post("/" , async (req,res) => {
 
       // console.log(typeof(pdf))
       // console.log(email)
-      const update = {
-        "text_mkthmmjs" : pdf.email,
-        "numeric_mkvpsn8d" : pdf.purchaseOrders,
-        "numeric_mkvp75bx" : pdf.workOrders
-        
-      }
-    
+   
       // console.log(pdf.buffer)
       const result = await uploadFile(pulseId , obj.fileID, pdf.buffer)
       console.log("Result : " , result);
 
-      const columns = await update_multiple_columns(boardId, pulseId , update)
+      const columns = await update_multiple_columns(boardId, pulseId , pdf.email , pdf.purchaseOrder , pdf.workOrder)
       console.log("Columns has been updated: " , columns)
       // Send a 200 OK response to the webhook provider
       return res.status(200).send("Event received successfully");
@@ -94,5 +88,5 @@ app.listen(port, () => {
 });
 
 // Get your endpoint online
-// ngrok.connect({ addr: 8080, authtoken_from_env: true })
-//   .then(listener => console.log(`Ingress established at: ${listener.url()}`));
+ngrok.connect({ addr: 8080, authtoken_from_env: true })
+  .then(listener => console.log(`Ingress established at: ${listener.url()}`));
