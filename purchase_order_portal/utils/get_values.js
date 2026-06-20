@@ -49,8 +49,8 @@ module.exports = get_values = async (PULSE_ID) => {
 
     let obj = {}
     const text  = response.data.data.items[0].updates[0].body;
-    const emailID = 'text_mkwdddg3'
-    const fileID = 'file_mkwdmg6f'
+    const emailID = process.env.EMAIL_ID
+    const fileID = process.env.FILE_ID
     
     // console.log(emailID)
 
